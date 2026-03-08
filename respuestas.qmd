@@ -1,0 +1,78 @@
+---
+title: "Respuestas Práctica 1 - Benchmark"
+author: "Viviana Andrea Peña Gonzalez"
+format:
+  html: default
+  pdf: default
+execute:
+  echo: true
+  warning: false
+---
+
+# Introducción
+
+Breve descripción del objetivo del taller.
+
+# Parte A. Benchmark en JupyterLab
+
+## 01_benchmark_terra.ipynb
+- Tiempo total:
+- Observación breve:
+
+## 02_benchmark_stars.ipynb
+- Tiempo total:
+- Observación breve:
+
+## 03_benchmark_rasterio.ipynb
+- Tiempo total:
+- Observación breve:
+
+## 04_benchmark_rasters_julia.ipynb
+- Tiempo total:
+- Observación breve:
+
+# Parte B. Benchmark desde VSCode
+
+## Scripts ejecutados
+- benchmark_terra.R
+- benchmark_stars.R
+- benchmark_rasterio.py
+- benchmark_rasters.jl
+
+## Resultados
+Tabla con:
+- motor
+- tiempo total
+- media global
+
+# Parte C. Benchmark desde Windows Terminal (PowerShell)
+
+## Opción utilizada
+Explicar si usaste:
+- opción 1: entrando al intérprete
+- opción 2: ejecución directa
+
+## Tiempos obtenidos
+Tabla con:
+- motor
+- tiempo total
+
+## Comparación frente a JupyterLab o VSCode
+Breve comentario.
+
+# Preguntas de análisis
+
+## 1. Entorno de ejecución
+Respuesta
+
+## 2. Abstracción en la práctica
+Respuesta
+
+## 3. Julia y el costo de compilación
+Respuesta
+
+## 4. Elección informada
+Respuesta en máximo 5 líneas
+
+# Conclusión
+Párrafo corto de cierre.
