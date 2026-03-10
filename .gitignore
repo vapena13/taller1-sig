@@ -6,7 +6,7 @@ __pycache__/
 *.pyc
 
 # Quarto build
-.respuestas_files/
+.respuestas_files/libs
 _site/
 
 # R
