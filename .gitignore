@@ -1,6 +1,21 @@
+# Jupyter
 .ipynb_checkpoints/
 .virtual_documents/
 *.log
 *.zip
-*.html
-*.pdf
+__pycache__/
+*.pyc
+# Quarto build
+.respuestas_files/
+_site/
+ R
+.Rhistory
+.RData
+
+# sistema
+.DS_Store
+Thumbs.db
+
+# archivos temporales
+*.log
+*.tmp
