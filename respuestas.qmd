@@ -9,70 +9,106 @@ execute:
   warning: false
 ---
 
-# Introducción
-
-Breve descripción del objetivo del taller.
+En este taller se realizó un benchmark de procesamiento raster usando una escena Sentinel-2 en distintos lenguajes y entornos de ejecución. El ejercicio permitió comparar el desempeño de R con `terra`, R con `stars`, Python con `rasterio` y Julia con `Rasters.jl` y `ArchGDAL`, considerando el lenguaje, y también el entorno en el que se ejecuta (jupyter,vscode,powershell). El objetivo fue observar cómo cambian los tiempos de procesamiento según el stack completo: librerías, kernel, terminal y forma de ejecución.
 
 # Parte A. Benchmark en JupyterLab
 
 ## 01_benchmark_terra.ipynb
-- Tiempo total:
-- Observación breve:
+
+Tiempo total: **13.194 s**  
+Media global: **3766.625**
+
+Observación: `terra` permite trabajar directamente con objetos raster optimizados y realizar operaciones matemáticas de forma eficiente. En este caso se cargó la imagen Sentinel-2, se seleccionó la banda correspondiente y se aplicó la operación de escala antes de calcular la media global.
+Fuente del resultado: `Resultados Terra: 13.194 seg | Promedio = 3766.625`. :contentReference[oaicite:0]{index=0}
 
 ## 02_benchmark_stars.ipynb
-- Tiempo total:
-- Observación breve:
+
+Tiempo total reportado: 10.661 s  
+Media global: 3766.625
+
+Observación: `stars` fue más lento que `terra` en este benchmark. Esto puede asociarse al costo adicional de manipular objetos con una capa de abstracción más alta y a la conversión interna necesaria para calcular la media global.  
+Fuente del resultado: `Stars: 10.661 seg | mean = 3766.625`. :contentReference[oaicite:1]{index=1}
 
 ## 03_benchmark_rasterio.ipynb
-- Tiempo total:
-- Observación breve:
+
+Tiempo total reportado: 3.000 s  
+Media global: 3766.624630
+
+Observación: Python con `rasterio` fue el motor más rápido en JupyterLab. Esto sugiere un buen desempeño del backend GDAL combinado con operaciones vectorizadas en memoria sobre arreglos numéricos.  
+Fuente del resultado: `Python: 3.000 seg | mean = 3766.624630`. :contentReference[oaicite:2]{index=2}
 
 ## 04_benchmark_rasters_julia.ipynb
-- Tiempo total:
-- Observación breve:
+
+Tiempo total reportado: 11.406 s  
+Media global: 3766.62463
+
+Observación: Julia mostró un tiempo mayor en el notebook, lo cual es consistente con el costo de compilación inicial del lenguaje (warm-up). Una vez compiladas las funciones, el rendimiento tiende a estabilizarse.  
+Fuente del resultado: `Julia: 11.406 seg | mean = 3766.62463`. :contentReference[oaicite:3]{index=3}
 
 # Parte B. Benchmark desde VSCode
 
+En esta parte se ejecutaron los scripts directamente desde la terminal integrada de VSCode, sin usar JupyterLab.
+
 ## Scripts ejecutados
-- benchmark_terra.R
-- benchmark_stars.R
-- benchmark_rasterio.py
-- benchmark_rasters.jl
+
+- `benchmark_terra.R`
+- `benchmark_stars.R`
+- `benchmark_rasterio.py`
+- `benchmark_rasters.jl`
 
 ## Resultados
-Tabla con:
-- motor
-- tiempo total
-- media global
+
+| Motor | Tiempo (s) | Media |
+|------|------|------|
+| terra | 13.189 | 3766.624630 |
+| stars | 9.213 | 3766.625 |
+| rasterio | 2.899 | 3766.624630 |
+| rasters.jl | 11.606 | 3766.62463 |
+
+Python nuevamente presentó el menor tiempo de ejecución. `stars` mostró un tiempo menor que en el notebook, mientras que `terra` y Julia se mantuvieron en rangos similares.
+
 
 # Parte C. Benchmark desde Windows Terminal (PowerShell)
 
-## Opción utilizada
-Explicar si usaste:
-- opción 1: entrando al intérprete
-- opción 2: ejecución directa
+## Los scripts se ejecutaron directamente mediante `docker exec`.
+
+Se utilizó la opción 1 para ejecutar julia ya que se evidenciaba demora en la ajecucipón del entorno inicial.
+
+Se utilizó la opción 2,  para los scripts de python y R, con ejecución directa mediante `docker exec`, ya que permitió correr cada script desde Windows Terminal sin depender de JupyterLab ni de la terminal integrada de VSCode.
 
 ## Tiempos obtenidos
-Tabla con:
-- motor
-- tiempo total
+
+| Motor | Tiempo total | Media |
+|------|------|------|
+| terra | 13.674 | 3766.624630 |
+| stars | 19.349 | 3766.625 |
+| rasterio | 2.558 | 3766.624630 |
+| rasters.jl | 10.943 | 3766.62463 |
 
 ## Comparación frente a JupyterLab o VSCode
-Breve comentario.
+
+En este entorno Python continuó siendo el motor más rápido. stars mostró un incremento notable en el tiempo, lo cual puede estar asociado al costo de carga de librerías y manejo interno de objetos raster.
 
 # Preguntas de análisis
 
 ## 1. Entorno de ejecución
-Respuesta
+
+Sí se observaron diferencias entre JupyterLab, VSCode y Windows Terminal. Una razón técnica posible es el overhead del kernel en JupyterLab, donde se mantiene una sesión interactiva activa, además del costo de renderización de celdas y manejo del entorno notebook. En VSCode y PowerShell la ejecución suele ser más directa, especialmente cuando se lanzan scripts completos desde terminal. También influye si el lenguaje necesita inicialización del entorno o compilación previa.
 
 ## 2. Abstracción en la práctica
-Respuesta
 
-## 3. Julia y el costo de compilación
-Respuesta
+En este benchmark, el costo de las abstracciones parece más visible en `stars` y en Julia. En `stars`, la manipulación de objetos raster con estructuras de más alto nivel puede introducir pasos extra antes de llegar al cálculo final. En Julia, además del modelo de abstracción, se suma el costo inicial de compilación. En contraste, `rasterio` mostró un flujo más directo sobre datos numéricos, lo que se reflejó en tiempos menores.
+
+## 3. Julia y el costo de compilación (Warm-up)
+
+Sí se notó el efecto del warm-up de Julia. Este efecto se hace más evidente en la primera ejecución, porque Julia debe compilar funciones y dependencias antes de correr el benchmark real. En entornos interactivos esto suele sentirse más, sobre todo cuando la sesión acaba de iniciar. Después de ese primer entonrno, las siguientes ejecuciones tienden a estandarizarse y a ser más rápidas.
 
 ## 4. Elección informada
-Respuesta en máximo 5 líneas
+
+Después de ejecutar el benchmark en tres entornos distintos, mi elección del “Titán” para una emergencia ambiental real sería Python con `rasterio`, porque en este ejercicio mostró el tiempo más bajo y un comportamiento consistente. Sin embargo, la elección final también dependería de la infraestructura disponible, la necesidad de integrar otros análisis y la reproducibilidad del flujo completo.
 
 # Conclusión
-Párrafo corto de cierre.
+
+Este ejercicio mostró que el rendimiento no depende únicamente del lenguaje, sino de la interacción entre librerías, entorno de ejecución y forma de lanzar el proceso. Aunque Python fue el más rápido en JupyterLab, la comparación completa debe considerar el overhead del entorno, el manejo de memoria y el costo de abstracción. 
+Por otra parte, en otro escenario con más imágenes u operaciones más complejas se vería la utilidad real de usar abstracciones planteadas para datos raster como las que manejan `stars` y  `julia`.
+

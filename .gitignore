@@ -1,14 +1,15 @@
 # Jupyter
 .ipynb_checkpoints/
-.virtual_documents/
-*.log
-*.zip
+
+# Python
 __pycache__/
 *.pyc
+
 # Quarto build
 .respuestas_files/
 _site/
- R
+
+# R
 .Rhistory
 .RData
 

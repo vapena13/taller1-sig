@@ -1,3 +1,6 @@
+import Pkg
+Pkg.add("Rasters")
+
 using Rasters
 using ArchGDAL
 using Statistics
